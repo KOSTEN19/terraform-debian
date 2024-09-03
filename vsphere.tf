@@ -11,7 +11,7 @@ provider "vsphere" {
   
 #Name of the Datacenter in the vCenter
   data "vsphere_datacenter" "dc" {
-    name = "HQ"
+    name = "Datacenter"
   }
 #Name of the Cluster in the vCenter
   data "vsphere_compute_cluster" "cluster" {
@@ -20,25 +20,25 @@ provider "vsphere" {
   }
 #Name of the Datastore in the vCenter, where VM will be deployed
   data "vsphere_datastore" "datastore" {
-    name          = "VMware-iSCSI-01"
+    name          = "TrueNAS-Storage"
     datacenter_id = data.vsphere_datacenter.dc.id
   }
 #Name of the Portgroup in the vCenter, to which VM will be attached
   data "vsphere_network" "network" {
-    name          = "VLAN-111"
+    name          = "VM Network"
     datacenter_id = data.vsphere_datacenter.dc.id
   }
 #Name of the Templete in the vCenter, which will be used to the deployment
   data "vsphere_virtual_machine" "ubuntu20-04" {
-    name          = "ubuntu20-04-temp"
+    name          = "TEMPLATE DEBIAN 12"
     datacenter_id = data.vsphere_datacenter.dc.id
   }
   
 #Set VM parameteres
   resource "vsphere_virtual_machine" "ubu-testing" {
     name = "ubu-test"
-    num_cpus = 2
-    memory   = 4096
+    num_cpus = 4
+    memory   = 8192
     guest_id = "ubuntu64Guest"
     resource_pool_id = data.vsphere_compute_cluster.cluster.resource_pool_id
     datastore_id     = data.vsphere_datastore.datastore.id
@@ -51,7 +51,7 @@ provider "vsphere" {
     disk {
       label            = "disk0"
       thin_provisioned = true
-      size             = 50
+      size             = 100
     }
   
   
